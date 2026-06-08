@@ -59,7 +59,8 @@ module "blog_sg" {
 }
 
 module "blog_alb" {
-  source = "terraform-aws-modules/alb/aws"
+  source  = "terraform-aws-modules/alb/aws"
+  version = "10.5.0"
 
   name    = "blog-alb"
   vpc_id  = module.blog_vpc.vpc_id
@@ -79,8 +80,9 @@ module "blog_alb" {
   tags = {
     Environment = "dev"
   }
-  
-  resource "aws_lb_target_group" "blog" {
+}
+
+resource "aws_lb_target_group" "blog" {
   name     = "blog"
   port     = 80
   protocol = "HTTP"
@@ -91,6 +93,4 @@ resource "aws_lb_target_group_attachment" "blog" {
   target_group_arn = aws_lb_target_group.blog.arn
   target_id        = aws_instance.blog.id
   port             = 80
-}
-
 }
