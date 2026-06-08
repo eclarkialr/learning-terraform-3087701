@@ -60,7 +60,6 @@ module "blog_sg" {
 
 module "blog_alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "10.5.0"
 
   name    = "blog-alb"
   vpc_id  = module.blog_vpc.vpc_id
@@ -77,12 +76,12 @@ listeners = {
       target_groups = [
         {
           target_group_arn = aws_lb_target_group.blog.arn
+          weight           = 1
         }
       ]
     }
   }
 }
-
   tags = {
     Environment = "dev"
   }
