@@ -68,20 +68,26 @@ module "blog_alb" {
 
   security_groups = [module.blog_sg.security_group_id]
 
-  listeners = {
-    blog-http = {
-      port     = 80
-      protocol = "HTTP"
-      forward = {
-        target_group_arn = aws_lb_target_group.blog.arn
-      }
+listeners = {
+  blog-http = {
+    port     = 80
+    protocol = "HTTP"
+
+    forward = {
+      target_groups = [
+        {
+          target_group_arn = aws_lb_target_group.blog.arn
+        }
+      ]
     }
+  }
+}
 
   tags = {
     Environment = "dev"
   }
 }
-}
+
 
 resource "aws_lb_target_group" "blog" {
   name     = "blog"
