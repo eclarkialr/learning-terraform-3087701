@@ -81,6 +81,7 @@ module "blog_alb" {
     Environment = "dev"
   }
 }
+}
 
 resource "aws_lb_target_group" "blog" {
   name     = "blog"
