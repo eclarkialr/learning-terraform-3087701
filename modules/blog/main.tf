@@ -50,13 +50,11 @@ module "blog_autoscaling" {
 
   security_groups = [module.blog_sg.security_group_id]
 
-  # ✅ Replaced launch_template_config (v9+) with v4-compatible launch_template
-  launch_template = {
-    image_id      = data.aws_ami.app_ami.id
-    instance_type = var.instance_type
-  }
+  # ✅ Use launch configuration (v4-compatible way)
+  image_id      = data.aws_ami.app_ami.id
+  instance_type = var.instance_type
 
-  # ✅ Replaced traffic_source_attachments with v4-compatible target_group_arns
+  # ✅ Attach to ALB target group
   target_group_arns = [module.blog_alb.target_group_arns[0]]
 }
 
