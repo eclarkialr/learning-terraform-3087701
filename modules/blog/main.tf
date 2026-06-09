@@ -31,22 +31,33 @@ module "blog_vpc" {
   }
 }
 
+resource "aws_lb_target_group" "blog" {
+  name     = "${var.environment.name}-blog"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = module.blog_vpc.vpc_id
+}
 
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
-  version = "= 5.0.0"
+  version = "9.0.2"
 
-  name = "blog"
+  name = "${var.environment.name}-blog"
 
   min_size            = var.asg_min
   max_size            = var.asg_max
-  vpc_zone_identifier = module.blog_vpc.public_subnets
-  target_group_arns   = module.blog_alb.target_group_arns
-  security_groups     = [module.blog_sg.security_group_id]
 
-  launch_template_config = {
-    image_id      = data.aws_ami.app_ami.id
-    instance_type = var.instance_type
+  vpc_zone_identifier = module.blog_vpc.public_subnets
+
+  launch_template_name = "${var.environment.name}-blog"
+  security_groups      = [module.blog_sg.security_group_id]
+  instance_type        = var.instance_type
+  image_id             = data.aws_ami.app_ami.id
+
+  traffic_source_attachments = {
+    ${var.environment.name}-blog-alb = {
+      traffic_source_identifier = aws_lb_target_group.blog.arn
+    }
   }
 }
 
@@ -54,22 +65,13 @@ module "blog_alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "5.0.0"
 
-  name = "blog-alb"
+  name = "${var.environment.name}-blog-alb"
 
   load_balancer_type = "application"
 
   vpc_id             = module.blog_vpc.vpc_id
   subnets            = module.blog_vpc.public_subnets
   security_groups    = [module.blog_sg.security_group_id]
-
-  target_groups = [
-    {
-      name_prefix      = "blog-"
-      backend_protocol = "HTTP"
-      backend_port     = 80
-      target_type      = "instance"
-    }
-  ]
 
   http_tcp_listeners = [
     {
@@ -89,7 +91,7 @@ module "blog_sg" {
   version = "4.13.0"
 
   vpc_id  = module.blog_vpc.vpc_id
-  name    = "blog"
+  name    = "${var.environment.name}-blog"
   ingress_rules = ["https-443-tcp","http-80-tcp"]
   ingress_cidr_blocks = ["0.0.0.0/0"]
   egress_rules = ["all-all"]
