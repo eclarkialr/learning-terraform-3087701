@@ -17,7 +17,7 @@ data "aws_ami" "app_ami" {
 
 module "blog_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.32.0"
+  version = "3.19.0"
 
   name = var.environment.name
   cidr = "${var.environment.network_prefix}.0.0/16"
