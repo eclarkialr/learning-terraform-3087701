@@ -40,7 +40,7 @@ resource "aws_lb_target_group" "blog" {
 
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
-  version = "5.0.0"
+  version = "9.0.2"
 
   name = "${var.environment.name}-blog"
 
@@ -48,14 +48,19 @@ module "blog_autoscaling" {
   max_size            = var.asg_max
   vpc_zone_identifier = module.blog_vpc.public_subnets
 
-  target_group_arns = module.blog_alb.target_group_arns
-
   security_groups = [module.blog_sg.security_group_id]
 
-  # ✅ Correct way for v5.0.0
-  launch_template = {
+  # ✅ REQUIRED for v6+ / v9
+  launch_template_config = {
     image_id      = data.aws_ami.app_ami.id
     instance_type = var.instance_type
+  }
+
+  # ✅ REQUIRED replacement for target_group_arns
+  traffic_source_attachments = {
+    "${var.environment.name}-blog-alb" = {
+      traffic_source_identifier = module.blog_alb.target_group_arns[0]
+    }
   }
 }
 
