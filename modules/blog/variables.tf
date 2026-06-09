@@ -1,6 +1,6 @@
 variable "instance_type" {
   description = "Type of EC2 instance to provision"
-  default     = "t3.micro"
+  default     = "t3.nano"
 }
 
 variable "ami_filter" {
@@ -19,7 +19,8 @@ variable "ami_filter" {
 
 variable "environment" {
   description = "Deployment environment"
-  type = object ({
+
+  type        = object ({
     name           = string
     network_prefix = string
   })
@@ -29,12 +30,13 @@ variable "environment" {
   }
 }
 
-variable "min_size" {
-  description = "Minimum number of instances in the ASG"
-  default = 1
+
+variable "asg_min" {
+  description = "Minimum instance count for the ASG"
+  default     = 1
 }
 
-variable "max_size" {
-  description = "Maximum number of instances in the ASG"
-  default = 2
+variable "asg_max" {
+  description = "Maximum instance count for the ASG"
+  default     = 2
 }

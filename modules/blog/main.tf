@@ -14,6 +14,7 @@ data "aws_ami" "app_ami" {
   owners = [var.ami_filter.owner]
 }
 
+
 module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -26,6 +27,56 @@ module "blog_vpc" {
   tags = {
     Terraform = "true"
     Environment = var.environment.name
+  }
+}
+
+
+module "blog_autoscaling" {
+  source  = "terraform-aws-modules/autoscaling/aws"
+  version = "6.5.2"
+
+  name = "blog"
+
+  min_size            = var.asg_min
+  max_size            = var.asg_max
+  vpc_zone_identifier = module.blog_vpc.public_subnets
+  target_group_arns   = module.blog_alb.target_group_arns
+  security_groups     = [module.blog_sg.security_group_id]
+  instance_type       = var.instance_type
+  image_id            = data.aws_ami.app_ami.id
+}
+
+module "blog_alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 6.0"
+
+  name = "blog-alb"
+
+  load_balancer_type = "application"
+
+  vpc_id             = module.blog_vpc.vpc_id
+  subnets            = module.blog_vpc.public_subnets
+  security_groups    = [module.blog_sg.security_group_id]
+
+  target_groups = [
+    {
+      name_prefix      = "blog-"
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "instance"
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
+    }
+  ]
+
+  tags = {
+    Environment = "dev"
   }
 }
 
