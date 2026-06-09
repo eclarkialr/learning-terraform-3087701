@@ -40,7 +40,7 @@ resource "aws_lb_target_group" "blog" {
 
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
-  version = "9.0.2"
+  version = "4.0"
 
   name = "${var.environment.name}-blog"
 
@@ -91,7 +91,7 @@ module "blog_alb" {
 
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "4.13.0"
+  version = "4.9"
 
   vpc_id  = module.blog_vpc.vpc_id
   name    = "${var.environment.name}-blog"
