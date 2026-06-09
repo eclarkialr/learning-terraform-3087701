@@ -15,7 +15,8 @@ data "aws_ami" "app_ami" {
 }
 
 module "blog_vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "3.19.0"
 
   name = var.environment.name
   cidr = "${var.environment.network_prefix}.0.0/16"
@@ -46,7 +47,7 @@ module "blog_autoscaling" {
 
 module "blog_alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
+  version = "~> 5.0.0"
 
   name = "blog-alb"
 
