@@ -42,6 +42,8 @@ module "blog_autoscaling" {
   vpc_zone_identifier = module.blog_vpc.public_subnets
 
   security_groups = [module.blog_sg.security_group_id]
+  
+  use_lc = true
 
   # ✅ Use launch configuration (v4-compatible way)
   image_id      = data.aws_ami.app_ami.id
@@ -70,7 +72,6 @@ module "blog_alb" {
       target_group_index = 0
     }
   ]
-
 
   target_groups = [
     {
