@@ -43,7 +43,7 @@ module "blog_autoscaling" {
 
   security_groups = [module.blog_sg.security_group_id]
 
-  use_lt = true
+  use_lt    = true
   create_lt = true
   lt_name   = "${var.environment.name}-blog-lt"
 
