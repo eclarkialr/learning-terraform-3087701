@@ -33,7 +33,7 @@ module "blog_vpc" {
 
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
-  version = "7.0" # <-- upgrade required
+  version = "4.0"
 
   name = "${var.environment.name}-blog"
 
