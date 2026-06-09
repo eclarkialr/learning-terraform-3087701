@@ -40,7 +40,7 @@ resource "aws_lb_target_group" "blog" {
 
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
-  version = "9.0.2"
+  version = "5.0.0"
 
   name = "${var.environment.name}-blog"
 
