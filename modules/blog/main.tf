@@ -43,9 +43,9 @@ module "blog_autoscaling" {
 
   security_groups = [module.blog_sg.security_group_id]
 
-  use_launch_template = true
-  create_launch_template = true
-  launch_template_name   = "${var.environment.name}-blog-lt"
+  use_lt = true
+  create_lt = true
+  lt_name   = "${var.environment.name}-blog-lt"
 
   image_id      = data.aws_ami.app_ami.id
   instance_type = var.instance_type
