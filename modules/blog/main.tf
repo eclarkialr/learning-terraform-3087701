@@ -71,17 +71,20 @@ module "blog_alb" {
     }
   ]
 
-resource "aws_lb_target_group" "blog" {
-  name     = "${var.environment.name}-blog"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = module.blog_vpc.vpc_id
-}
+
+  target_groups = [
+    {
+      name_prefix      = "blog-"
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "instance"
+
 
   tags = {
     Environment = "dev"
   }
 }
+  ]
 
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
