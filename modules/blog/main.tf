@@ -31,13 +31,6 @@ module "blog_vpc" {
   }
 }
 
-resource "aws_lb_target_group" "blog" {
-  name     = "${var.environment.name}-blog"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = module.blog_vpc.vpc_id
-}
-
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "4.0"
@@ -77,6 +70,13 @@ module "blog_alb" {
       target_group_index = 0
     }
   ]
+
+resource "aws_lb_target_group" "blog" {
+  name     = "${var.environment.name}-blog"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = module.blog_vpc.vpc_id
+}
 
   tags = {
     Environment = "dev"
