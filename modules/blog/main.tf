@@ -45,6 +45,7 @@ module "blog_autoscaling" {
   use_lt    = true
   create_lt = true
   lt_name   = "${var.environment.name}-blog-lt"
+  launch_template_version = "$Latest"
 
   image_id      = "ami-005fc6da594cf2dfd"
   instance_type = var.instance_type
