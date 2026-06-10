@@ -46,7 +46,7 @@ module "blog_autoscaling" {
   create_lt = true
   lt_name   = "${var.environment.name}-blog-lt"
 
-  image_id      = data.aws_ami.app_ami.id
+  image_id      = "ami-005fc6da594cf2dfd"
   instance_type = var.instance_type
 
   target_group_arns = [module.blog_alb.target_group_arns[0]]
