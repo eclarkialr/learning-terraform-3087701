@@ -47,7 +47,7 @@ module "blog_autoscaling" {
   lt_name   = "${var.environment.name}-blog-lt"
   lt_version = "$Latest"
 
-  image_id      = "ami-005fc6da594cf2dfd"
+  image_id      = "ami-0884ad3155268dd96"
   instance_type = var.instance_type
 
   target_group_arns = [module.blog_alb.target_group_arns[0]]
