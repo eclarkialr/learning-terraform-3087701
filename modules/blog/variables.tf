@@ -12,8 +12,8 @@ variable "ami_filter" {
   })
 
   default = {
-    name  = "bitnami-tomcat-*-x86_64-hvm-ebs-nami"
-    owner = "979382823631" # Bitnami
+    name  = "Apache Tomcat Server on Ubuntu22.04 by IOanyT Innovations new-prod-qv36ppu4gklf4"
+    owner = "679593333241" # Bitnami
   }
 }
 
